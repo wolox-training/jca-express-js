@@ -1,14 +1,22 @@
 const axios = require('axios').default;
 const logger = require('../logger');
+const { badGatewayError } = require('../errors');
+const {
+  common: {
+    services: { witterApiUrl }
+  }
+} = require('../../config');
+
+const randomNumber = () => Math.floor(Math.random() * 100);
 
 const WitterInstance = axios.create({
-  baseURL: 'http://numbersapi.com'
+  baseURL: witterApiUrl
 });
 
-exports.getWitter = (num = Math.floor(Math.random() * 100)) =>
+exports.getWitter = (num = randomNumber()) =>
   WitterInstance.get(`/${num}`)
     .then(res => res.data)
     .catch(error => {
       logger.error(`Request Error => ${error.message}`);
-      throw new Error(`Error in getWitter method => ${error.message}`);
+      throw badGatewayError(`Error in getWitter method => ${error.message}`);
     });
