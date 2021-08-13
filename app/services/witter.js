@@ -18,5 +18,5 @@ exports.getWitter = (num = randomNumber()) =>
     .then(res => res.data)
     .catch(error => {
       logger.error(`Request Error => ${error.message}`);
-      return  Promise.reject(badGatewayError(`Error in getWitter method => ${error.message}`));
+      return Promise.reject(badGatewayError(`Error in getWitter method => ${error.message}`));
     });
