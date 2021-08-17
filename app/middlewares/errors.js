@@ -6,7 +6,9 @@ const DEFAULT_STATUS_CODE = 500;
 const statusCodes = {
   [errors.DATABASE_ERROR]: 503,
   [errors.DEFAULT_ERROR]: 500,
-  [errors.WITTER_API_ERROR]: 502
+  [errors.WITTER_API_ERROR]: 502,
+  [errors.BAD_REQUEST]: 400,
+  [errors.DUPLICATE_VALUES]: 409
 };
 
 exports.handle = (error, req, res, next) => {
