@@ -1,12 +1,12 @@
 const { createUser } = require('../services/users');
-const { encrypt } = require('../helpers/encryp');
+const { encrypt } = require('../helpers/encrypt');
 const logger = require('../logger');
 
 exports.createUser = async (req, res, next) => {
   try {
     const { body: userData } = req;
 
-    const encryptPassword = encrypt(userData.password);
+    const encryptPassword = await encrypt(userData.password);
 
     const { name } = await createUser({ ...userData, password: encryptPassword });
 
