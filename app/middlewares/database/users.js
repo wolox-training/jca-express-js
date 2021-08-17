@@ -9,12 +9,9 @@ exports.validateUserByEmail = async (req, res, next) => {
     const user = await User.findOne({ where: { email } });
 
     logger.info(user);
-    if (user) {
-      next(duplicateValuesError('User already exist in database'));
-      return;
-    }
+    if (user) return next(duplicateValuesError('User already exist in database'));
 
-    next();
+    return next();
   } catch (error) {
     logger.error(databaseError(error));
     throw databaseError('Error trying to get a user by mail');

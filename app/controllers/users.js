@@ -10,12 +10,12 @@ exports.createUser = async (req, res, next) => {
 
     const { name } = await createUser({ ...userData, password: encryptPassword });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: 'User created successfully',
       data: { name }
     });
   } catch (error) {
     logger.error(error);
-    next(error);
+    return next(error);
   }
 };
