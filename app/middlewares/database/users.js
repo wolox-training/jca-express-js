@@ -1,4 +1,5 @@
 const logger = require('../../logger');
+const { USER_EXIST } = require('../../constants/messages');
 const { databaseError, duplicateValuesError } = require('../../errors');
 const { User } = require('../../models');
 
@@ -9,7 +10,7 @@ exports.validateUserByEmail = async (req, res, next) => {
     const user = await User.findOne({ where: { email } });
 
     logger.info(user);
-    if (user) return next(duplicateValuesError('User already exist in database'));
+    if (user) return next(duplicateValuesError(USER_EXIST));
 
     return next();
   } catch (error) {
