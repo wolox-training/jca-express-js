@@ -11,3 +11,9 @@ exports.defaultError = message => internalError(message, exports.DEFAULT_ERROR);
 
 exports.WITTER_API_ERROR = 'witter_api_error';
 exports.badGatewayError = message => internalError(message, exports.WITTER_API_ERROR);
+
+exports.BAD_REQUEST = 'bad_request';
+exports.badRequest = message => internalError(message, exports.BAD_REQUEST);
+
+exports.DUPLICATE_VALUES = 'duplicate_values';
+exports.duplicateValuesError = message => internalError(message, exports.DUPLICATE_VALUES);
