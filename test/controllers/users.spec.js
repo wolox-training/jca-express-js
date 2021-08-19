@@ -8,7 +8,7 @@ const {
   expectedOutputEmptyBody,
   expectedOutputInvalidDomain
 } = require('../mocks/users');
-const { EXIST } = require('../../app/constants/validations');
+const { create: createUser } = require('../factories/users');
 
 const request = supertest(app);
 
@@ -23,14 +23,14 @@ describe('# User: Sign Up', () => {
   });
 
   it('Test #2: User with an email already in use', async done => {
-    await request.post('/users').send(expectedInput);
-    const secondRequest = await request.post('/users').send(expectedInput);
+    await createUser({ email: expectedInput.email });
+    const res = await request.post('/users').send(expectedInput);
 
     const { internal_code, message } = expectedOutputEmailDuplicate;
 
-    expect(secondRequest.status).toBe(409);
-    expect(secondRequest.body.internal_code).toBe(internal_code);
-    expect(secondRequest.body.message).toBe(message);
+    expect(res.status).toBe(409);
+    expect(res.body.internal_code).toBe(internal_code);
+    expect(res.body.message).toBe(message);
     done();
   });
 
@@ -50,11 +50,9 @@ describe('# User: Sign Up', () => {
 
     const { internal_code, message } = expectedOutputEmptyBody;
 
-    const requiredItems = res.body.message.filter(({ msg }) => msg.includes(EXIST));
-
     expect(res.status).toBe(400);
     expect(res.body.internal_code).toBe(internal_code);
-    expect(requiredItems).toStrictEqual(message);
+    expect(res.body.message).toEqual(expect.arrayContaining(message));
     done();
   });
 
