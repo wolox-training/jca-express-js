@@ -1,38 +1,101 @@
+const { USER_SUCCESS, USER_EXIST } = require('../../app/constants/messages');
+const { IS_STRING } = require('../../app/constants/validations');
+const { BAD_REQUEST, DUPLICATE_VALUES } = require('../../app/errors');
+const { generateMessage } = require('../../app/helpers/utils');
+
 module.exports = {
-  userId: {
-    type: 'integer',
-    example: 7
-  },
-  username: {
+  name: {
     type: 'string',
-    example: 'tom99'
+    example: 'John'
   },
-  userEmail: {
+  surname: {
     type: 'string',
-    example: 'tom.engels@wolox.com.ar'
+    example: 'Doe'
   },
-  User: {
+  email: {
+    type: 'string',
+    example: 'john.doe@wolox.co'
+  },
+  password: {
+    type: 'string',
+    example: 'MyP4ssWor%'
+  },
+  userInput: {
     type: 'object',
     properties: {
-      id: {
-        $ref: '#/components/schemas/userId'
+      name: {
+        $ref: '#/components/schemas/name'
       },
-      username: {
-        $ref: '#/components/schemas/username'
+      surname: {
+        $ref: '#/components/schemas/surname'
       },
       email: {
-        $ref: '#/components/schemas/userEmail'
+        $ref: '#/components/schemas/email'
+      },
+      password: {
+        $ref: '#/components/schemas/password'
       }
     }
   },
-  Users: {
+  userCreated: {
     type: 'object',
     properties: {
-      users: {
+      message: {
+        type: 'string',
+        example: USER_SUCCESS
+      },
+      data: {
+        type: 'object',
+        properties: {
+          name: {
+            $ref: '#/components/schemas/name'
+          }
+        }
+      }
+    }
+  },
+  alreadyExist: {
+    type: 'object',
+    properties: {
+      message: {
+        type: 'string',
+        example: USER_EXIST
+      },
+      internal_code: {
+        type: 'string',
+        example: DUPLICATE_VALUES
+      }
+    }
+  },
+  userInvalidParameter: {
+    type: 'object',
+    properties: {
+      message: {
         type: 'array',
         items: {
-          $ref: '#/components/schemas/User'
+          properties: {
+            value: {
+              type: 'string',
+              example: 4
+            },
+            msg: {
+              type: 'string',
+              example: generateMessage('name', IS_STRING)
+            },
+            param: {
+              type: 'string',
+              example: 'name'
+            },
+            location: {
+              type: 'string',
+              example: 'body'
+            }
+          }
         }
+      },
+      internal_code: {
+        type: 'string',
+        example: BAD_REQUEST
       }
     }
   }
