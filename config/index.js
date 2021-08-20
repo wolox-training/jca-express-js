@@ -47,6 +47,9 @@ const config = {
     },
     services: {
       witterApiUrl: process.env.WITTER_API_URL
+    },
+    utils: {
+      saltLength: process.env.SALT_LENGTH || 10
     }
   }
 };
