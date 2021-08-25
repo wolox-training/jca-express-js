@@ -49,3 +49,20 @@ exports.createUserValidator = checkSchema({
     }
   }
 });
+
+exports.checkUserCredentials = checkSchema({
+  email: {
+    in: ['body'],
+    exists: { errorMessage: generateMessage('email', EXIST) },
+    notEmpty: { errorMessage: generateMessage('email', NOT_EMPTY) },
+    matches: {
+      options: emailRegex,
+      errorMessage: generateMessage('email', MAIL_MATCHES)
+    }
+  },
+  password: {
+    in: ['body'],
+    exists: { errorMessage: generateMessage('password', EXIST) },
+    notEmpty: { errorMessage: generateMessage('password', NOT_EMPTY) }
+  }
+});

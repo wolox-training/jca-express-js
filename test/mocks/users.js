@@ -1,7 +1,8 @@
-const { USER_EXIST, USER_SUCCESS } = require('../../app/constants/messages');
+const { USER_EXIST, USER_SUCCESS, USER_INVALID_CREDENTIAL } = require('../../app/constants/messages');
 const { PASSWORD_MATCHES, EXIST, MAIL_MATCHES } = require('../../app/constants/validations');
-const { DUPLICATE_VALUES, BAD_REQUEST } = require('../../app/errors');
+const { DUPLICATE_VALUES, BAD_REQUEST, INVALID_CREDENTIALS } = require('../../app/errors');
 const { generateMessage } = require('../../app/helpers/utils');
+const { encrypt } = require('../../app/helpers/encrypt');
 
 exports.expectedInput = {
   name: 'John',
@@ -41,7 +42,19 @@ exports.expectedOutputEmptyBody = {
   internal_code: BAD_REQUEST
 };
 
+exports.expectedOutputEmptyBodyAuth = {
+  message: [exports.nonParameterRequired('email', EXIST), exports.nonParameterRequired('password', EXIST)],
+  internal_code: BAD_REQUEST
+};
+
 exports.expectedOutputInvalidDomain = {
   message: [exports.nonParameterRequired('email', MAIL_MATCHES)],
   internal_code: BAD_REQUEST
 };
+
+exports.expectedOutputErrorCredentials = {
+  message: USER_INVALID_CREDENTIAL,
+  internal_code: INVALID_CREDENTIALS
+};
+
+exports.encryptedPassword = () => encrypt(exports.expectedInput.password);

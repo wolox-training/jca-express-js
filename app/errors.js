@@ -17,3 +17,6 @@ exports.badRequest = message => internalError(message, exports.BAD_REQUEST);
 
 exports.DUPLICATE_VALUES = 'duplicate_values';
 exports.duplicateValuesError = message => internalError(message, exports.DUPLICATE_VALUES);
+
+exports.INVALID_CREDENTIALS = 'invalid_credentials';
+exports.invalidCredentials = message => internalError(message, exports.INVALID_CREDENTIALS);
