@@ -16,7 +16,7 @@ exports.authUser = async (req, res, next) => {
 
     if (!validPassword) return next(invalidCredentials(USER_INVALID_CREDENTIAL));
 
-    Object.assign(req, { user });
+    req.user = user;
 
     return next();
   } catch (error) {
