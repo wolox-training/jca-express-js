@@ -24,9 +24,9 @@ exports.createUser = async (req, res, next) => {
 
 exports.signIn = (req, res, next) => {
   try {
-    const { email, name, surname } = req.user;
+    const { id, email } = req.user;
     logger.info(`Generate token for user: ${email}`);
-    const token = encode({ name, surname, email });
+    const token = encode({ id, email });
     return res.status(200).json({ token });
   } catch (error) {
     logger.error(error);
