@@ -9,7 +9,8 @@ const statusCodes = {
   [errors.WITTER_API_ERROR]: 502,
   [errors.BAD_REQUEST]: 400,
   [errors.DUPLICATE_VALUES]: 409,
-  [errors.INVALID_CREDENTIALS]: 403
+  [errors.INVALID_CREDENTIALS]: 403,
+  [errors.INVALID_TOKEN]: 401
 };
 
 exports.handle = (error, req, res, next) => {

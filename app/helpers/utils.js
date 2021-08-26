@@ -1,1 +1,1 @@
-exports.generateMessage = (field, message) => `Error in ${field} field, ${message}.`;
+exports.generateMessage = (field, message, type = 'field') => `Error in ${field} ${type}, ${message}.`;

@@ -1,7 +1,7 @@
 const logger = require('../logger');
-const { createUser } = require('../services/users');
+const { createUser, getUsers } = require('../services/users');
 const { encrypt } = require('../helpers/encrypt');
-const { USER_SUCCESS } = require('../constants/messages');
+const { USER_SUCCESS, GET_LIST_USERS_SUCCESS } = require('../constants/messages');
 const { encode } = require('../helpers/jwt');
 
 exports.createUser = async (req, res, next) => {
@@ -28,6 +28,16 @@ exports.signIn = (req, res, next) => {
     logger.info(`Generate token for user: ${email}`);
     const token = encode({ id, email });
     return res.status(200).json({ token });
+  } catch (error) {
+    logger.error(error);
+    return next(error);
+  }
+};
+
+exports.userList = async ({ query }, res, next) => {
+  try {
+    const data = await getUsers(query);
+    return res.status(200).json({ message: GET_LIST_USERS_SUCCESS, data });
   } catch (error) {
     logger.error(error);
     return next(error);

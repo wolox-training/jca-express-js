@@ -10,3 +10,12 @@ exports.createUser = user => {
     throw databaseError('User can not be created in database');
   }
 };
+
+exports.getUsers = ({ offset, limit }) => {
+  try {
+    return User.findAll({ offset, limit, attributes: { exclude: ['password'] }, raw: true });
+  } catch (error) {
+    logger.error(error);
+    throw databaseError('List of users could not be consulted');
+  }
+};
