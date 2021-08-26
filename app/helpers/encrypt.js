@@ -15,3 +15,12 @@ exports.encrypt = (value, salt = saltLength) => {
     throw defaultError('Encryption error');
   }
 };
+
+exports.decrypt = (value, hash) => {
+  try {
+    return bycrypt.compare(value, hash);
+  } catch (error) {
+    logger.error(error);
+    throw defaultError('Decrypt error');
+  }
+};
