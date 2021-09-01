@@ -19,3 +19,12 @@ exports.getUsers = ({ offset, limit }) => {
     throw databaseError('List of users could not be consulted');
   }
 };
+
+exports.upsertUser = user => {
+  try {
+    return User.upsert(user);
+  } catch (error) {
+    logger.error(error);
+    throw databaseError('Error creating/updating admin user');
+  }
+};

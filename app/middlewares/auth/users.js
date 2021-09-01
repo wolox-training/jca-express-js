@@ -16,6 +16,7 @@ exports.authUser = async (req, res, next) => {
 
     if (!validPassword) return next(invalidCredentials(USER_INVALID_CREDENTIAL));
 
+    // eslint-disable-next-line require-atomic-updates
     req.user = user;
 
     return next();

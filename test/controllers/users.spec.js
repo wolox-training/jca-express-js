@@ -3,7 +3,9 @@ const app = require('../../app');
 const {
   expectedInput,
   expectedOutput,
+  expectedOutputAdmin,
   expectedOutputEmailDuplicate,
+  expectedOutputUserRoleInvalid,
   expectedOutputInvalidPass,
   expectedOutputEmptyBody,
   expectedOutputEmptyBodyAuth,
@@ -17,6 +19,7 @@ const {
 const { encode } = require('../../app/helpers/jwt');
 const { GET_LIST_USERS_SUCCESS } = require('../../app/constants/messages');
 const { create: createUser, createMany } = require('../factories/users');
+const { ADMIN } = require('../../app/constants/roles');
 
 const request = supertest(app);
 
@@ -198,6 +201,76 @@ describe('# User: Get Users', () => {
     expect(res.body.message).toBe(GET_LIST_USERS_SUCCESS);
     expect(res.body.data).toBeInstanceOf(Array);
     expect(res.body.data).toHaveLength(limit);
+    done();
+  });
+});
+
+describe('# User: Create Admin User', () => {
+  it('Test #1: Admin created', async done => {
+    const email = 'email@wolox.co';
+    await createUser({ email, role: ADMIN });
+    const res = await request
+      .post('/admin/users')
+      .send(expectedInput)
+      .set('Authorization', `Bearer ${encode({ userId: 1, email })}`);
+
+    const { message, data } = expectedOutputAdmin;
+
+    expect(res.status).toBe(201);
+    expect(res.body.data.name).toBe(data.name);
+    expect(res.body.message).toBe(message);
+    done();
+  });
+
+  it('Test #2: Invalid user role to create an administrator user.', async done => {
+    const email = 'email@wolox.co';
+    await createUser({ email });
+    const res = await request
+      .post('/admin/users')
+      .send(expectedInput)
+      .set('Authorization', `Bearer ${encode({ userId: 1, email })}`);
+
+    const { internal_code, message } = expectedOutputUserRoleInvalid;
+
+    expect(res.status).toBe(401);
+    expect(res.body.internal_code).toBe(internal_code);
+    expect(res.body.message).toBe(message);
+    done();
+  });
+
+  it('Test #3: Empty Body', async done => {
+    const res = await request.post('/admin/users').send({});
+
+    const { internal_code, message } = expectedOutputEmptyBody;
+
+    expect(res.status).toBe(400);
+    expect(res.body.internal_code).toBe(internal_code);
+    expect(res.body.message).toEqual(expect.arrayContaining(message));
+    done();
+  });
+
+  it('Test #4: Token required', async done => {
+    const res = await request.post('/admin/users').send(expectedInput);
+
+    const { internal_code, message } = expectedOutputTokenRequired;
+
+    expect(res.status).toBe(401);
+    expect(res.body.internal_code).toBe(internal_code);
+    expect(res.body.message).toBe(message);
+    done();
+  });
+
+  it('Test #5: Token invalid', async done => {
+    const res = await request
+      .post('/admin/users')
+      .send(expectedInput)
+      .set('Authorization', 'Bearer token_invalid_123');
+
+    const { internal_code, message } = expectedOutputTokenInvalid;
+
+    expect(res.status).toBe(401);
+    expect(res.body.internal_code).toBe(internal_code);
+    expect(res.body.message).toBe(message);
     done();
   });
 });

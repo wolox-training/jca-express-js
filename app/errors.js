@@ -23,3 +23,6 @@ exports.invalidCredentials = message => internalError(message, exports.INVALID_C
 
 exports.INVALID_TOKEN = 'invalid_token';
 exports.invalidToken = message => internalError(message, exports.INVALID_TOKEN);
+
+exports.ERROR_UNAUTHENTICATED = 'unauthorized';
+exports.unauthenticated = message => internalError(message, exports.ERROR_UNAUTHENTICATED);

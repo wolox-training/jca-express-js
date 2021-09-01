@@ -1,12 +1,20 @@
 const {
   USER_EXIST,
   USER_SUCCESS,
+  ADMIN_USER_SUCCESS,
   USER_INVALID_CREDENTIAL,
   TOKEN_REQUIRED,
-  TOKEN_INVALID
+  TOKEN_INVALID,
+  UNAUTHORIZED_USER
 } = require('../../app/constants/messages');
+const {
+  DUPLICATE_VALUES,
+  BAD_REQUEST,
+  INVALID_CREDENTIALS,
+  INVALID_TOKEN,
+  ERROR_UNAUTHENTICATED
+} = require('../../app/errors');
 const { PASSWORD_MATCHES, EXIST, MAIL_MATCHES } = require('../../app/constants/validations');
-const { DUPLICATE_VALUES, BAD_REQUEST, INVALID_CREDENTIALS, INVALID_TOKEN } = require('../../app/errors');
 const { generateMessage } = require('../../app/helpers/utils');
 const { encrypt } = require('../../app/helpers/encrypt');
 
@@ -22,9 +30,19 @@ exports.expectedOutput = {
   data: { name: exports.expectedInput.name }
 };
 
+exports.expectedOutputAdmin = {
+  message: ADMIN_USER_SUCCESS,
+  data: { name: exports.expectedInput.name }
+};
+
 exports.expectedOutputEmailDuplicate = {
   message: USER_EXIST,
   internal_code: DUPLICATE_VALUES
+};
+
+exports.expectedOutputUserRoleInvalid = {
+  message: UNAUTHORIZED_USER,
+  internal_code: ERROR_UNAUTHENTICATED
 };
 
 exports.nonParameterRequired = (parameterName, msg, location, typeMessage) => ({
