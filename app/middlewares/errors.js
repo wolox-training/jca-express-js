@@ -10,7 +10,8 @@ const statusCodes = {
   [errors.BAD_REQUEST]: 400,
   [errors.DUPLICATE_VALUES]: 409,
   [errors.INVALID_CREDENTIALS]: 403,
-  [errors.INVALID_TOKEN]: 401
+  [errors.INVALID_TOKEN]: 401,
+  [errors.ERROR_UNAUTHENTICATED]: 401
 };
 
 exports.handle = (error, req, res, next) => {
