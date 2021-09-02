@@ -6,11 +6,15 @@ const { createUserValidator, checkUserCredentials } = require('./middlewares/sch
 const { checkPagination } = require('./middlewares/schemas/pagination');
 const { validateUserByEmail } = require('./middlewares/database/users');
 const { authUser } = require('./middlewares/auth/users');
-const { validateToken, validateTokenAdmin } = require('./middlewares/auth/token');
+const { validateToken, validateAdmin } = require('./middlewares/auth/token');
 
 exports.init = app => {
   app.get('/health', healthCheck);
-  app.post('/admin/users', [validateSchema([createUserValidator]), validateTokenAdmin], signUpAdmin);
+  app.post(
+    '/admin/users',
+    [validateSchema([createUserValidator]), validateToken, validateAdmin],
+    signUpAdmin
+  );
   app.get('/users', [validateSchema([checkPagination]), validateToken], userList);
   app.post('/users', [validateSchema([createUserValidator]), validateUserByEmail], signUp);
   app.post('/users/sessions', [validateSchema([checkUserCredentials]), authUser], signIn);

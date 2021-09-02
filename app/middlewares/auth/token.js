@@ -26,24 +26,15 @@ exports.validateToken = (req, res, next) => {
   }
 };
 
-exports.validateTokenAdmin = async (req, res, next) => {
+exports.validateAdmin = async (req, res, next) => {
   try {
-    const authorization = req.header('authorization');
+    const { email } = req.user;
 
-    if (!authorization) return next(invalidToken(TOKEN_REQUIRED));
-
-    const [, token] = authorization.split(' ');
-
-    const user = decoded(token);
-
-    const status = await User.findOne({ where: { email: user.email }, raw: true });
+    const status = await User.findOne({ where: { email }, raw: true });
 
     if (!status || status.role !== ADMIN) return next(unauthenticated(UNAUTHORIZED_USER));
 
-    logger.info(`Admin: ${user.email} authenticated successfully`);
-
-    // eslint-disable-next-line require-atomic-updates
-    req.user = user;
+    logger.info(`Admin: ${email} authenticated successfully`);
 
     return next();
   } catch (error) {
