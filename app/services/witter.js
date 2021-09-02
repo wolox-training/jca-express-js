@@ -1,5 +1,7 @@
 const axios = require('axios').default;
 const logger = require('../logger');
+const { databaseError } = require('../errors');
+const { Weet } = require('../models');
 const { badGatewayError } = require('../errors');
 const {
   common: {
@@ -20,3 +22,12 @@ exports.getWitter = (num = randomNumber()) =>
       logger.error(`Request Error => ${error.message}`);
       return Promise.reject(badGatewayError(`Error in getWitter method => ${error.message}`));
     });
+
+exports.createWeet = weed => {
+  try {
+    return Weet.create(weed);
+  } catch (error) {
+    logger.error(error);
+    throw databaseError(`Error creating weet => ${error.message}`);
+  }
+};
