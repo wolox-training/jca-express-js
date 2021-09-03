@@ -3,17 +3,17 @@ const app = require('../../app');
 const { encode } = require('../../app/helpers/jwt');
 const { create: createUser } = require('../factories/users');
 const { expectedOutputTokenRequired, expectedOutputTokenInvalid } = require('../mocks/users');
-const { expectedOutputWeedCreated } = require('../mocks/weeds');
+const { expectedOutputWeetCreated } = require('../mocks/weets');
 
 const request = supertest(app);
 
-describe('# Weeds: Create weed', () => {
-  it('Test #1: Weed created', async done => {
+describe('# Weets: Create weet', () => {
+  it('Test #1: Weet created', async done => {
     const email = 'email@wolox.co';
     await createUser({ email });
-    const res = await request.post('/weeds').set('Authorization', `Bearer ${encode({ id: 1, email })}`);
+    const res = await request.post('/weets').set('Authorization', `Bearer ${encode({ id: 1, email })}`);
 
-    const { message } = expectedOutputWeedCreated;
+    const { message } = expectedOutputWeetCreated;
 
     expect(res.status).toBe(201);
     expect(res.body.message).toBe(message);
@@ -22,7 +22,7 @@ describe('# Weeds: Create weed', () => {
   });
 
   it('Test #2: Token required', async done => {
-    const res = await request.post('/weeds');
+    const res = await request.post('/weets');
 
     const { internal_code, message } = expectedOutputTokenRequired;
 
@@ -33,7 +33,7 @@ describe('# Weeds: Create weed', () => {
   });
 
   it('Test #3: Token invalid', async done => {
-    const res = await request.post('/weeds').set('Authorization', 'Bearer token_invalid_123');
+    const res = await request.post('/weets').set('Authorization', 'Bearer token_invalid_123');
 
     const { internal_code, message } = expectedOutputTokenInvalid;
 
