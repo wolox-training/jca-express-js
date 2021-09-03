@@ -23,16 +23,16 @@ exports.getWitter = (num = randomNumber()) =>
       return Promise.reject(badGatewayError(`Error in getWitter method => ${error.message}`));
     });
 
-exports.createWeet = weed => {
+exports.createWeet = weet => {
   try {
-    return Weet.create(weed);
+    return Weet.create(weet);
   } catch (error) {
     logger.error(error);
     throw databaseError(`Error creating weet => ${error.message}`);
   }
 };
 
-exports.getAllWeeds = ({ offset, limit }) => {
+exports.getAllWeets = ({ offset, limit }) => {
   try {
     return Weet.findAll({ offset, limit, raw: true });
   } catch (error) {

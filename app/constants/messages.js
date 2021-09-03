@@ -6,5 +6,5 @@ exports.GET_LIST_USERS_SUCCESS = 'Successful user query';
 exports.TOKEN_REQUIRED = 'Token is required';
 exports.TOKEN_INVALID = 'The token is corrupt or has expired';
 exports.UNAUTHORIZED_USER = 'Unauthorized user';
-exports.WEED_SUCCESS = 'Weed successfully created';
-exports.GET_LIST_WEEDS_SUCCESS = 'Successful weed query';
+exports.WEET_SUCCESS = 'Weet successfully created';
+exports.GET_LIST_WEETS_SUCCESS = 'Successful weet query';

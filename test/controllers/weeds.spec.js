@@ -2,20 +2,20 @@ const supertest = require('supertest');
 const app = require('../../app');
 const { encode } = require('../../app/helpers/jwt');
 const { create: createUser } = require('../factories/users');
-const { createMany: createManyWeeds } = require('../factories/weets');
+const { createMany: createManyWeets } = require('../factories/weets');
 const { expectedOutputTokenRequired, expectedOutputTokenInvalid } = require('../mocks/users');
 const { expectedEmptyQuery } = require('../mocks/pagination');
-const { expectedOutputWeedCreated, expectedOutputGetWeeds } = require('../mocks/weeds');
+const { expectedOutputGetWeets, expectedOutputWeetCreated } = require('../mocks/weets');
 
 const request = supertest(app);
 
-describe('# Weeds: Create weed', () => {
-  it('Test #1: Weed created', async done => {
+describe('# Weets: Create weet', () => {
+  it('Test #1: Weet created', async done => {
     const email = 'email@wolox.co';
     await createUser({ email });
-    const res = await request.post('/weeds').set('Authorization', `Bearer ${encode({ id: 1, email })}`);
+    const res = await request.post('/weets').set('Authorization', `Bearer ${encode({ id: 1, email })}`);
 
-    const { message } = expectedOutputWeedCreated;
+    const { message } = expectedOutputWeetCreated;
 
     expect(res.status).toBe(201);
     expect(res.body.message).toBe(message);
@@ -24,7 +24,7 @@ describe('# Weeds: Create weed', () => {
   });
 
   it('Test #2: Token required', async done => {
-    const res = await request.post('/weeds');
+    const res = await request.post('/weets');
 
     const { internal_code, message } = expectedOutputTokenRequired;
 
@@ -35,7 +35,7 @@ describe('# Weeds: Create weed', () => {
   });
 
   it('Test #3: Token invalid', async done => {
-    const res = await request.post('/weeds').set('Authorization', 'Bearer token_invalid_123');
+    const res = await request.post('/weets').set('Authorization', 'Bearer token_invalid_123');
 
     const { internal_code, message } = expectedOutputTokenInvalid;
 
@@ -46,18 +46,18 @@ describe('# Weeds: Create weed', () => {
   });
 });
 
-describe('# Weeds: Get all weeds', () => {
-  it('Test #1: Weeds search is successful', async done => {
+describe('# Weets: Get all weets', () => {
+  it('Test #1: Weets search is successful', async done => {
     const email = 'email@wolox.co';
     const limit = 10;
     await createUser({ email });
-    await createManyWeeds(15);
+    await createManyWeets(15);
     const res = await request
-      .get('/weeds')
+      .get('/weets')
       .query({ offset: 0, limit })
       .set('Authorization', `Bearer ${encode({ id: 1, email })}`);
 
-    const { message } = expectedOutputGetWeeds;
+    const { message } = expectedOutputGetWeets;
 
     expect(res.status).toBe(200);
     expect(res.body.message).toBe(message);
@@ -67,7 +67,7 @@ describe('# Weeds: Get all weeds', () => {
   });
 
   it('Test #2: Offset required', async done => {
-    const res = await request.get('/weeds').query({ limit: 10 });
+    const res = await request.get('/weets').query({ limit: 10 });
 
     const { internal_code, message } = expectedEmptyQuery;
 
@@ -78,7 +78,7 @@ describe('# Weeds: Get all weeds', () => {
   });
 
   it('Test #3: Limit required', async done => {
-    const res = await request.get('/weeds').query({ offset: 0 });
+    const res = await request.get('/weets').query({ offset: 0 });
 
     const { internal_code, message } = expectedEmptyQuery;
 
@@ -89,7 +89,7 @@ describe('# Weeds: Get all weeds', () => {
   });
 
   it('Test #4: Token required', async done => {
-    const res = await request.get('/weeds').query({ offset: 0, limit: 10 });
+    const res = await request.get('/weets').query({ offset: 0, limit: 10 });
 
     const { internal_code, message } = expectedOutputTokenRequired;
 
