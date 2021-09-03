@@ -7,3 +7,4 @@ exports.TOKEN_REQUIRED = 'Token is required';
 exports.TOKEN_INVALID = 'The token is corrupt or has expired';
 exports.UNAUTHORIZED_USER = 'Unauthorized user';
 exports.WEED_SUCCESS = 'Weed successfully created';
+exports.GET_LIST_WEEDS_SUCCESS = 'Successful weed query';

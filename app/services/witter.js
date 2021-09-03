@@ -31,3 +31,12 @@ exports.createWeet = weed => {
     throw databaseError(`Error creating weet => ${error.message}`);
   }
 };
+
+exports.getAllWeeds = ({ offset, limit }) => {
+  try {
+    return Weet.findAll({ offset, limit, raw: true });
+  } catch (error) {
+    logger.error(error);
+    throw databaseError(`Error searching weets => ${error.message}`);
+  }
+};
