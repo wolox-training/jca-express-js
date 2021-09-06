@@ -8,7 +8,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       userId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'User',
+          key: 'id'
+        }
       }
     },
     {
@@ -20,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Weet.associate = ({ User }) => {
     Weet.belongsTo(User, { foreignKey: 'userId' });
+    Weet.belongsTo(User, { through: 'Rating' });
   };
 
   return Weet;

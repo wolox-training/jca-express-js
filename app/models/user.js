@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = ({ Weet }) => {
     User.hasMany(Weet, { foreignKey: 'userId' });
+    User.belongsToMany(Weet, { through: 'Rating' });
   };
 
   return User;
