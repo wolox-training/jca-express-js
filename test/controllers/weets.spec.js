@@ -1,14 +1,20 @@
 const supertest = require('supertest');
+const axios = require('axios').default;
+
 const app = require('../../app');
 const { encode } = require('../../app/helpers/jwt');
 const { create: createUser } = require('../factories/users');
 const { expectedOutputTokenRequired, expectedOutputTokenInvalid } = require('../mocks/users');
-const { expectedOutputWeetCreated } = require('../mocks/weets');
+const { expectedOutputWeetCreated, weet } = require('../mocks/weets');
 
 const request = supertest(app);
 
+jest.mock('axios');
+
 describe('# Weets: Create weet', () => {
   it('Test #1: Weet created', async done => {
+    axios.get.mockResolvedValue({ data: weet });
+
     const email = 'email@wolox.co';
     await createUser({ email });
     const res = await request.post('/weets').set('Authorization', `Bearer ${encode({ id: 1, email })}`);
@@ -17,7 +23,7 @@ describe('# Weets: Create weet', () => {
 
     expect(res.status).toBe(201);
     expect(res.body.message).toBe(message);
-    expect(res.body.data).toHaveProperty('content');
+    expect(res.body.data.content).toBe(weet);
     done();
   });
 
