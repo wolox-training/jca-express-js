@@ -7,3 +7,6 @@ exports.expectedOutputWeetCreated = {
 exports.expectedOutputGetWeets = {
   message: GET_LIST_WEETS_SUCCESS
 };
+
+exports.weet =
+  'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et ma';

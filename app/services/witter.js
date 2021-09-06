@@ -11,12 +11,9 @@ const {
 
 const randomNumber = () => Math.floor(Math.random() * 100);
 
-const WitterInstance = axios.create({
-  baseURL: witterApiUrl
-});
-
 exports.getWitter = (num = randomNumber()) =>
-  WitterInstance.get(`/${num}`)
+  axios
+    .get(`${witterApiUrl}/${num}`)
     .then(res => res.data)
     .catch(error => {
       logger.error(`Request Error => ${error.message}`);
