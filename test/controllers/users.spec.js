@@ -12,10 +12,10 @@ const {
   expectedOutputInvalidDomain,
   expectedOutputErrorCredentials,
   encryptedPassword,
-  expectedEmptyQueryGetUser,
   expectedOutputTokenRequired,
   expectedOutputTokenInvalid
 } = require('../mocks/users');
+const { expectedEmptyQuery } = require('../mocks/pagination');
 const { encode } = require('../../app/helpers/jwt');
 const { GET_LIST_USERS_SUCCESS } = require('../../app/constants/messages');
 const { create: createUser, createMany } = require('../factories/users');
@@ -134,7 +134,7 @@ describe('# User: Get Users', () => {
   it('Test #1: Empty Query Params', async done => {
     const res = await request.get('/users');
 
-    const { internal_code, message } = expectedEmptyQueryGetUser;
+    const { internal_code, message } = expectedEmptyQuery;
 
     expect(res.status).toBe(400);
     expect(res.body.internal_code).toBe(internal_code);
@@ -145,7 +145,7 @@ describe('# User: Get Users', () => {
   it('Test #2: Offset is required', async done => {
     const res = await request.get('/users').query({ limit: 10 });
 
-    const { internal_code, message } = expectedEmptyQueryGetUser;
+    const { internal_code, message } = expectedEmptyQuery;
 
     expect(res.status).toBe(400);
     expect(res.body.internal_code).toBe(internal_code);
@@ -156,7 +156,7 @@ describe('# User: Get Users', () => {
   it('Test #3: Limit is required', async done => {
     const res = await request.get('/users').query({ offset: 0 });
 
-    const { internal_code, message } = expectedEmptyQueryGetUser;
+    const { internal_code, message } = expectedEmptyQuery;
 
     expect(res.status).toBe(400);
     expect(res.body.internal_code).toBe(internal_code);

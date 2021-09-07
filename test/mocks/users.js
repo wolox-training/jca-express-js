@@ -84,19 +84,6 @@ exports.expectedOutputErrorCredentials = {
   internal_code: INVALID_CREDENTIALS
 };
 
-exports.expectedEmptyQueryGetUser = {
-  message: [
-    exports.nonParameterRequired('offset', 'must be a valid number greater than zero', 'query', 'query'),
-    exports.nonParameterRequired(
-      'limit',
-      'must be a valid number greater than zero and less than 20',
-      'query',
-      'query'
-    )
-  ],
-  internal_code: BAD_REQUEST
-};
-
 exports.expectedOutputTokenRequired = {
   message: TOKEN_REQUIRED,
   internal_code: INVALID_TOKEN
