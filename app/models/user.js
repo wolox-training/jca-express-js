@@ -30,6 +30,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: USER
+      },
+      position: {
+        type: DataTypes.ENUM,
+        values: ['Developer', 'Lead', 'TL', 'EM', 'HEAD', 'CEO'],
+        defaultValue: 'Developer'
       }
     },
     {
@@ -38,9 +43,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  User.associate = ({ Weet }) => {
+  User.associate = ({ Weet, Rating }) => {
     User.hasMany(Weet, { foreignKey: 'userId' });
-    User.belongsToMany(Weet, { through: 'Rating' });
+    User.hasMany(Rating, { foreignKey: 'userId' });
   };
 
   return User;

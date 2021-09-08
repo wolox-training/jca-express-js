@@ -23,7 +23,7 @@ module.exports = {
           key: 'id'
         }
       },
-      rating: {
+      score: {
         type: Sequelize.BOOLEAN,
         allowNull: false
       },

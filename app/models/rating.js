@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const Rating = sequelize.define(
     'Rating',
     {
-      rating: {
+      score: {
         type: DataTypes.BOOLEAN,
         allowNull: false
       },
@@ -31,15 +31,8 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Rating.associate = ({ User, Weet }) => {
-    Rating.belongsTo(User, {
-      foreignKey: 'userId',
-      as: 'user'
-    });
-
-    Rating.belongsTo(Weet, {
-      foreignKey: 'weetId',
-      as: 'weet'
-    });
+    Rating.belongsTo(User, { foreignKey: 'userId' });
+    Rating.belongsTo(Weet, { foreignKey: 'weetId' });
   };
 
   return Rating;

@@ -22,9 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Weet.associate = ({ User }) => {
+  Weet.associate = ({ User, Rating }) => {
     Weet.belongsTo(User, { foreignKey: 'userId' });
-    Weet.belongsTo(User, { through: 'Rating' });
+    Weet.hasMany(Rating, { foreignKey: 'weetId' });
   };
 
   return Weet;
