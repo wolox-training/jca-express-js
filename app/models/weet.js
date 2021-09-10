@@ -8,7 +8,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       userId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'User',
+          key: 'id'
+        }
       }
     },
     {
@@ -18,8 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Weet.associate = ({ User }) => {
+  Weet.associate = ({ User, Rating }) => {
     Weet.belongsTo(User, { foreignKey: 'userId' });
+    Weet.hasMany(Rating, { foreignKey: 'weetId' });
   };
 
   return Weet;
