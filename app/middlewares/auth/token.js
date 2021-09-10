@@ -3,9 +3,9 @@ const { TOKEN_INVALID, TOKEN_REQUIRED, UNAUTHORIZED_USER } = require('../../cons
 const { ADMIN } = require('../../constants/roles');
 const { invalidToken, unauthenticated } = require('../../errors');
 const { decoded } = require('../../helpers/jwt');
-const { User } = require('../../models');
+const { User, Token } = require('../../models');
 
-exports.validateToken = (req, res, next) => {
+exports.validateToken = async (req, res, next) => {
   try {
     const authorization = req.header('authorization');
 
@@ -13,10 +13,19 @@ exports.validateToken = (req, res, next) => {
 
     const [, token] = authorization.split(' ');
 
-    const user = decoded(token);
+    const existToken = await Token.findOne({ where: { token } });
+
+    if (!existToken) return next(invalidToken(TOKEN_INVALID));
+
+    const tokenDecoded = decoded(token);
+
+    const user = await User.findOne({ where: { email: tokenDecoded.email }, raw: true });
+
+    if (!user) return next(invalidToken(UNAUTHORIZED_USER));
 
     logger.info(`${user.email} authenticated successfully`);
 
+    // eslint-disable-next-line require-atomic-updates
     req.user = user;
 
     return next();
@@ -26,16 +35,10 @@ exports.validateToken = (req, res, next) => {
   }
 };
 
-exports.validateAdmin = async (req, res, next) => {
+exports.validateAdmin = ({ user: { role, email } }, res, next) => {
   try {
-    const { email } = req.user;
-
-    const status = await User.findOne({ where: { email }, raw: true });
-
-    if (!status || status.role !== ADMIN) return next(unauthenticated(UNAUTHORIZED_USER));
-
+    if (role !== ADMIN) return next(unauthenticated(UNAUTHORIZED_USER));
     logger.info(`Admin: ${email} authenticated successfully`);
-
     return next();
   } catch (error) {
     logger.error(error);

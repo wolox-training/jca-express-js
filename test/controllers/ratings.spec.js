@@ -5,6 +5,7 @@ const { encode } = require('../../app/helpers/jwt');
 
 const { create: createUser } = require('../factories/users');
 const { create: createWeet } = require('../factories/weets');
+const { saveToken } = require('../factories/token');
 
 const app = require('../../app');
 
@@ -12,14 +13,16 @@ const request = supertest(app);
 
 describe('# Rating', () => {
   it('Test #1: Rating of the successful weet', async done => {
-    const email = 'john.doe@gmail.com';
+    const email = 'email@wolox.co';
+    const token = encode({ email });
     await createUser({ email });
+    await saveToken({ userId: 1, token });
     await createWeet();
 
     const res = await request
       .post('/weets/1/ratings')
       .send({ score: true })
-      .set('Authorization', `Bearer ${encode({ id: 1, email })}`);
+      .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(201);
     done();
