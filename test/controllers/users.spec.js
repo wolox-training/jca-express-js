@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 const supertest = require('supertest');
 const app = require('../../app');
 const {
@@ -17,8 +18,9 @@ const {
 } = require('../mocks/users');
 const { expectedEmptyQuery } = require('../mocks/pagination');
 const { encode } = require('../../app/helpers/jwt');
-const { GET_LIST_USERS_SUCCESS } = require('../../app/constants/messages');
+const { GET_LIST_USERS_SUCCESS, INVALID_ALL_SESSION } = require('../../app/constants/messages');
 const { create: createUser, createMany } = require('../factories/users');
+const { saveToken } = require('../factories/token');
 const { ADMIN } = require('../../app/constants/roles');
 
 const request = supertest(app);
@@ -190,12 +192,16 @@ describe('# User: Get Users', () => {
   });
 
   it('Test #6: Get list successfully', async done => {
+    const email = 'email@wolox.co';
+    const token = encode({ email });
+    await createUser({ email });
+    await saveToken({ userId: 1, token });
     await createMany(15);
     const limit = 10;
     const res = await request
       .get('/users')
       .query({ offset: 0, limit })
-      .set('Authorization', `Bearer ${encode({ userId: 1, email: 'email@wolox.co' })}`);
+      .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
     expect(res.body.message).toBe(GET_LIST_USERS_SUCCESS);
@@ -208,11 +214,13 @@ describe('# User: Get Users', () => {
 describe('# User: Create Admin User', () => {
   it('Test #1: Admin created', async done => {
     const email = 'email@wolox.co';
+    const token = encode({ email });
     await createUser({ email, role: ADMIN });
+    await saveToken({ userId: 1, token });
     const res = await request
       .post('/admin/users')
       .send(expectedInput)
-      .set('Authorization', `Bearer ${encode({ userId: 1, email })}`);
+      .set('Authorization', `Bearer ${token}`);
 
     const { message, data } = expectedOutputAdmin;
 
@@ -224,11 +232,13 @@ describe('# User: Create Admin User', () => {
 
   it('Test #2: Invalid user role to create an administrator user.', async done => {
     const email = 'email@wolox.co';
+    const token = encode({ email });
     await createUser({ email });
+    await saveToken({ userId: 1, token });
     const res = await request
       .post('/admin/users')
       .send(expectedInput)
-      .set('Authorization', `Bearer ${encode({ userId: 1, email })}`);
+      .set('Authorization', `Bearer ${token}`);
 
     const { internal_code, message } = expectedOutputUserRoleInvalid;
 
@@ -267,6 +277,45 @@ describe('# User: Create Admin User', () => {
       .set('Authorization', 'Bearer token_invalid_123');
 
     const { internal_code, message } = expectedOutputTokenInvalid;
+
+    expect(res.status).toBe(401);
+    expect(res.body.internal_code).toBe(internal_code);
+    expect(res.body.message).toBe(message);
+    done();
+  });
+});
+
+describe('# User: Invalid All Sessions', () => {
+  it('Test #1: Invalid Session for user', async done => {
+    const email = 'email@wolox.co';
+    const token = encode({ email });
+    await createUser({ email });
+    await saveToken({ userId: 1, token });
+
+    const res = await request.post('/users/sessions/invalidate_all').set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(201);
+    expect(res.body.message).toBe(INVALID_ALL_SESSION);
+    done();
+  });
+
+  it('Test #2: Token invalid', async done => {
+    const res = await request
+      .post('/users/sessions/invalidate_all')
+      .set('Authorization', 'Bearer invalid_roken');
+
+    const { internal_code, message } = expectedOutputTokenInvalid;
+
+    expect(res.status).toBe(401);
+    expect(res.body.internal_code).toBe(internal_code);
+    expect(res.body.message).toBe(message);
+    done();
+  });
+
+  it('Test #3: Token required', async done => {
+    const res = await request.post('/users/sessions/invalidate_all');
+
+    const { internal_code, message } = expectedOutputTokenRequired;
 
     expect(res.status).toBe(401);
     expect(res.body.internal_code).toBe(internal_code);

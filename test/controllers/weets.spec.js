@@ -5,6 +5,7 @@ const app = require('../../app');
 const { encode } = require('../../app/helpers/jwt');
 const { create: createUser } = require('../factories/users');
 const { createMany: createManyWeets } = require('../factories/weets');
+const { saveToken } = require('../factories/token');
 const { expectedOutputTokenRequired, expectedOutputTokenInvalid } = require('../mocks/users');
 const { expectedEmptyQuery } = require('../mocks/pagination');
 const { expectedOutputGetWeets, expectedOutputWeetCreated, weet } = require('../mocks/weets');
@@ -18,8 +19,10 @@ describe('# Weets: Create weet', () => {
     axios.get.mockResolvedValue({ data: weet });
 
     const email = 'email@wolox.co';
+    const token = encode({ email });
     await createUser({ email });
-    const res = await request.post('/weets').set('Authorization', `Bearer ${encode({ id: 1, email })}`);
+    await saveToken({ userId: 1, token });
+    const res = await request.post('/weets').set('Authorization', `Bearer ${token}`);
 
     const { message } = expectedOutputWeetCreated;
 
@@ -56,12 +59,14 @@ describe('# Weets: Get all weets', () => {
   it('Test #1: Weets search is successful', async done => {
     const email = 'email@wolox.co';
     const limit = 10;
+    const token = encode({ email });
     await createUser({ email });
+    await saveToken({ userId: 1, token });
     await createManyWeets(15);
     const res = await request
       .get('/weets')
       .query({ offset: 0, limit })
-      .set('Authorization', `Bearer ${encode({ id: 1, email })}`);
+      .set('Authorization', `Bearer ${token}`);
 
     const { message } = expectedOutputGetWeets;
 

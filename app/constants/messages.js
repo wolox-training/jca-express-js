@@ -8,3 +8,5 @@ exports.TOKEN_INVALID = 'The token is corrupt or has expired';
 exports.UNAUTHORIZED_USER = 'Unauthorized user';
 exports.WEET_SUCCESS = 'Weet successfully created';
 exports.GET_LIST_WEETS_SUCCESS = 'Successful weet query';
+exports.RATING_WEET_SUCCESS = 'Success rating weet';
+exports.INVALID_ALL_SESSION = 'All user sessions have been invalidated';

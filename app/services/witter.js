@@ -37,3 +37,13 @@ exports.getAllWeets = ({ offset, limit }) => {
     throw databaseError(`Error searching weets => ${error.message}`);
   }
 };
+
+exports.getUserWeetsIds = async userId => {
+  try {
+    const weetIds = await Weet.findAll({ attributes: ['id'], where: { userId }, raw: true });
+    if (weetIds.length === 0) throw databaseError('Some error occurred while getting the weets');
+    return weetIds.map(({ id }) => id);
+  } catch (error) {
+    throw error;
+  }
+};
